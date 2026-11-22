@@ -1,31 +1,194 @@
-<!DOCTYPE html><html lang="cs"><head><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes"><title>Angličtina Dubaj</title>
-<style>body{font-family:-apple-system,sans-serif;margin:0;background:#f4efe6;color:#222}
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Angličtina">
+<title>Angličtina Dubaj</title>
+<style>
+body{font-family:-apple-system,sans-serif;margin:0;background:#f4efe6;color:#222;-webkit-tap-highlight-color:transparent}
 header{background:#c8892f;color:#fff;padding:14px;text-align:center;font-size:20px;font-weight:bold}
-.wrap{padding:12px;max-width:600px;margin:auto}button{font-size:17px;border:0;border-radius:10px;padding:12px;margin:4px 0;width:100%;background:#fff;box-shadow:0 1px 3px #0002}
+.wrap{padding:12px;max-width:600px;margin:auto}
+button{font-size:17px;border:0;border-radius:10px;padding:12px;margin:4px 0;width:100%;background:#fff;color:#222;box-shadow:0 1px 3px #0002}
 .card{background:#fff;border-radius:12px;padding:14px;margin:10px 0;box-shadow:0 1px 3px #0002}
-.en{font-size:20px;font-weight:600}.cz{color:#666;margin:6px 0}.row{display:flex;gap:6px}.row button{flex:1;background:#2f6fc8;color:#fff}
-.done{background:#3a9b55!important;color:#fff}.top{display:flex;gap:6px}.top button{flex:1;background:#555;color:#fff}
-.hide{filter:blur(6px)}</style></head><body><header>Angličtina na cestu do Dubaje</header><div class="wrap" id="app"></div>
+.phrase{cursor:pointer}
+.phrase.playing{outline:3px solid #2f6fc8}
+.en{font-size:20px;font-weight:600}
+.cz{color:#666;margin:6px 0}
+.row{display:flex;gap:6px}
+.row button{flex:1;background:#2f6fc8;color:#fff}
+.row button.chk{background:#ddd;color:#222}
+.row button.done{background:#3a9b55;color:#fff}
+.top{display:flex;gap:6px}
+.top button{flex:1;background:#555;color:#fff}
+.blue{background:#2f6fc8!important;color:#fff!important}
+.hide{filter:blur(7px)}
+.info{font-size:15px;color:#444}
+.warn{background:#fff3cd;border-radius:10px;padding:10px;font-size:15px;margin:8px 0}
+</style>
+</head>
+<body>
+<header>Angličtina na cestu do Dubaje</header>
+<div class="wrap" id="app"></div>
 <script>
-const D={"1. Základy": [["Hello, nice to meet you.", "Ahoj, rád vás poznávám."], ["Good morning.", "Dobré ráno."], ["Thank you very much.", "Děkuji mnohokrát."], ["You're welcome.", "Není zač."], ["Excuse me.", "Promiňte."], ["Sorry, I don't understand.", "Promiňte, nerozumím."], ["Can you speak slowly, please?", "Můžete mluvit pomalu, prosím?"], ["Can you repeat that, please?", "Můžete to zopakovat, prosím?"], ["My name is Spikl.", "Jmenuji se Spikl."], ["I'm from the Czech Republic.", "Jsem z České republiky."], ["This is my daughter.", "Toto je moje dcera."], ["Do you speak English?", "Mluvíte anglicky?"], ["Yes, please. / No, thank you.", "Ano, prosím. / Ne, děkuji."], ["How much is it?", "Kolik to stojí?"], ["Where is the toilet?", "Kde je toaleta?"]], "2. Letiště": [["Where is the check-in for Emirates?", "Kde je odbavení Emirates?"], ["Here is my passport.", "Tady je můj pas."], ["I have one suitcase.", "Mám jeden kufr."], ["Can we sit together?", "Můžeme sedět spolu?"], ["Window or aisle?", "U okna, nebo do uličky?"], ["Which gate is it?", "Který je to východ (gate)?"], ["Is the flight delayed?", "Má let zpoždění?"], ["What is the purpose of your visit? — Holiday.", "Jaký je účel návštěvy? — Dovolená."], ["How long will you stay? — One week.", "Jak dlouho zůstanete? — Jeden týden."], ["Where is the baggage claim?", "Kde je výdej zavazadel?"], ["My bag is missing.", "Chybí mi zavazadlo."], ["Where can I exchange money?", "Kde si můžu vyměnit peníze?"]], "3. Taxi a doprava": [["Can you take us to this hotel, please?", "Můžete nás odvézt do tohoto hotelu?"], ["How long does it take?", "Jak dlouho to trvá?"], ["Please use the meter.", "Zapněte prosím taxametr."], ["Stop here, please.", "Zastavte tady, prosím."], ["Where is the metro station?", "Kde je stanice metra?"], ["Two tickets, please.", "Dva lístky, prosím."], ["Is it far from here?", "Je to odsud daleko?"], ["Turn left. Turn right. Go straight.", "Doleva. Doprava. Rovně."], ["Can I pay by card?", "Můžu platit kartou?"]], "4. Hotel": [["We have a reservation.", "Máme rezervaci."], ["The reservation is under the name Spikl.", "Rezervace je na jméno Spikl."], ["What time is breakfast?", "V kolik je snídaně?"], ["What time is check-out?", "V kolik je odhlášení z pokoje?"], ["The air conditioning doesn't work.", "Nefunguje klimatizace."], ["Can we have more towels?", "Můžeme dostat víc ručníků?"], ["What is the Wi-Fi password?", "Jaké je heslo k wifi?"], ["Can you call a taxi for us?", "Můžete nám zavolat taxi?"], ["Can we leave our bags here?", "Můžeme si tu nechat zavazadla?"]], "5. Restaurace": [["A table for two, please.", "Stůl pro dva, prosím."], ["Can I see the menu?", "Můžu vidět jídelní lístek?"], ["I would like this, please.", "Dal bych si tohle, prosím."], ["What do you recommend?", "Co doporučujete?"], ["Is it spicy?", "Je to pálivé?"], ["Without ice, please.", "Bez ledu, prosím."], ["A bottle of water, please.", "Láhev vody, prosím."], ["The bill, please.", "Účet, prosím."], ["It was delicious.", "Bylo to výborné."], ["Is service included?", "Je spropitné v ceně?"]], "6. Nákupy a výlety": [["I'm just looking, thank you.", "Jen se dívám, děkuji."], ["Do you have a smaller size?", "Máte menší velikost?"], ["It's too expensive.", "To je moc drahé."], ["Can you give me a discount?", "Můžete mi dát slevu?"], ["I'll take it.", "Vezmu si to."], ["What time does it open?", "V kolik se otevírá?"], ["Two adults, please.", "Dva dospělí, prosím."], ["Can you take a photo of us?", "Můžete nás vyfotit?"], ["Where is the beach?", "Kde je pláž?"], ["Where is the Burj Khalifa entrance?", "Kde je vstup do Burdž Chalífa?"]], "7. Nouze": [["Help!", "Pomoc!"], ["I need a doctor.", "Potřebuji lékaře."], ["Where is the pharmacy?", "Kde je lékárna?"], ["Call the police, please.", "Zavolejte prosím policii."], ["I lost my phone.", "Ztratil jsem telefon."], ["My daughter is lost.", "Ztratila se mi dcera."], ["I don't feel well.", "Není mi dobře."], ["Where is the Czech embassy?", "Kde je české velvyslanectví?"]], "8. Čísla a čas": [["One, two, three, four, five.", "Jedna, dvě, tři, čtyři, pět."], ["Six, seven, eight, nine, ten.", "Šest, sedm, osm, devět, deset."], ["Twenty, fifty, one hundred.", "Dvacet, padesát, sto."], ["What time is it?", "Kolik je hodin?"], ["It's ten o'clock.", "Je deset hodin."], ["Today, tomorrow, yesterday.", "Dnes, zítra, včera."], ["In the morning, in the evening.", "Ráno, večer."], ["Monday, Tuesday, Wednesday.", "Pondělí, úterý, středa."]]};
-let st=JSON.parse(localStorage.getItem('st')||'{}');const save=()=>localStorage.setItem('st',JSON.stringify(st));
-function say(t,r){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=r;
-const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('en'));if(v)u.voice=v;speechSynthesis.speak(u);}
-const app=document.getElementById('app');
-function home(){let h='<div class="card"><b>Jak se učit:</b> každý den 20 minut. Pusť si frázi, opakuj ji nahlas 3×, pak ji zkus v režimu „Zkouška“. Hotovou frázi označ ✓.</div>';
-for(const k in D){const n=D[k].filter((_,i)=>st[k+i]).length;h+=`<button onclick="lekce('${k}',0)">${k} (${n}/${D[k].length})</button>`;}
-h+='<button style="background:#2f6fc8;color:#fff" onclick="zk()">🎧 Zkouška poslechem</button><button onclick="if(confirm(\'Smazat postup?\')){st={};save();home()}">Vynulovat postup</button>';app.innerHTML=h;}
-function lekce(k){let h=`<div class="top"><button onclick="home()">← Zpět</button><button onclick="all('${k}')">▶ Přehrát vše</button></div><h3>${k}</h3>`;
-D[k].forEach((p,i)=>{h+=`<div class="card"><div class="en">${p[0]}</div><div class="cz">${p[1]}</div><div class="row">
-<button onclick="say(D['${k}'][${i}][0],0.9)">▶ Normálně</button><button onclick="say(D['${k}'][${i}][0],0.55)">🐢 Pomalu</button>
-<button class="${st[k+i]?'done':''}" onclick="st['${k}${i}']=!st['${k}${i}'];save();lekce('${k}')">✓</button></div></div>`});app.innerHTML=h;scrollTo(0,0);}
-async function all(k){for(const p of D[k]){await new Promise(r=>{const u=new SpeechSynthesisUtterance(p[0]);u.lang='en-GB';u.rate=0.8;u.onend=()=>setTimeout(r,2500);speechSynthesis.speak(u);});}}
-function zk(){const ks=Object.keys(D),k=ks[Math.floor(Math.random()*ks.length)],i=Math.floor(Math.random()*D[k].length),p=D[k][i];
-app.innerHTML=`<div class="top"><button onclick="home()">← Zpět</button></div><div class="card"><p>Poslechni si větu a řekni si, co znamená. Pak odkryj.</p>
-<button style="background:#2f6fc8;color:#fff" onclick="say('${p[0].replace(/'/g,"\\'")}',0.9)">▶ Přehrát</button>
-<div id="o" class="hide"><div class="en">${p[0]}</div><div class="cz">${p[1]}</div></div>
-<button onclick="document.getElementById('o').classList.remove('hide')">Odkrýt</button><button onclick="zk()">Další věta →</button></div>`;say(p[0],0.9);}
-speechSynthesis.getVoices();home();
-</script></body></html>
+const D = {
+"1. Základy":[["Hello, nice to meet you.","Ahoj, rád vás poznávám."],["Good morning.","Dobré ráno."],["Thank you very much.","Děkuji mnohokrát."],["You're welcome.","Není zač."],["Excuse me.","Promiňte."],["Sorry, I don't understand.","Promiňte, nerozumím."],["Can you speak slowly, please?","Můžete mluvit pomalu, prosím?"],["Can you repeat that, please?","Můžete to zopakovat, prosím?"],["My name is Spikl.","Jmenuji se Spikl."],["I'm from the Czech Republic.","Jsem z České republiky."],["This is my daughter.","Toto je moje dcera."],["Do you speak English?","Mluvíte anglicky?"],["Yes, please. No, thank you.","Ano, prosím. Ne, děkuji."],["How much is it?","Kolik to stojí?"],["Where is the toilet?","Kde je toaleta?"]],
+"2. Letiště":[["Where is the check-in for Emirates?","Kde je odbavení Emirates?"],["Here is my passport.","Tady je můj pas."],["I have one suitcase.","Mám jeden kufr."],["Can we sit together?","Můžeme sedět spolu?"],["Window or aisle?","U okna, nebo do uličky?"],["Which gate is it?","Který je to východ (gate)?"],["Is the flight delayed?","Má let zpoždění?"],["What is the purpose of your visit? Holiday.","Jaký je účel návštěvy? Dovolená."],["How long will you stay? One week.","Jak dlouho zůstanete? Jeden týden."],["Where is the baggage claim?","Kde je výdej zavazadel?"],["My bag is missing.","Chybí mi zavazadlo."],["Where can I exchange money?","Kde si můžu vyměnit peníze?"]],
+"3. Taxi a doprava":[["Can you take us to this hotel, please?","Můžete nás odvézt do tohoto hotelu?"],["How long does it take?","Jak dlouho to trvá?"],["Please use the meter.","Zapněte prosím taxametr."],["Stop here, please.","Zastavte tady, prosím."],["Where is the metro station?","Kde je stanice metra?"],["Two tickets, please.","Dva lístky, prosím."],["Is it far from here?","Je to odsud daleko?"],["Turn left. Turn right. Go straight.","Doleva. Doprava. Rovně."],["Can I pay by card?","Můžu platit kartou?"]],
+"4. Hotel":[["We have a reservation.","Máme rezervaci."],["The reservation is under the name Spikl.","Rezervace je na jméno Spikl."],["What time is breakfast?","V kolik je snídaně?"],["What time is check-out?","V kolik je odhlášení z pokoje?"],["The air conditioning doesn't work.","Nefunguje klimatizace."],["Can we have more towels?","Můžeme dostat víc ručníků?"],["What is the Wi-Fi password?","Jaké je heslo k wifi?"],["Can you call a taxi for us?","Můžete nám zavolat taxi?"],["Can we leave our bags here?","Můžeme si tu nechat zavazadla?"]],
+"5. Restaurace":[["A table for two, please.","Stůl pro dva, prosím."],["Can I see the menu?","Můžu vidět jídelní lístek?"],["I would like this, please.","Dal bych si tohle, prosím."],["What do you recommend?","Co doporučujete?"],["Is it spicy?","Je to pálivé?"],["Without ice, please.","Bez ledu, prosím."],["A bottle of water, please.","Láhev vody, prosím."],["The bill, please.","Účet, prosím."],["It was delicious.","Bylo to výborné."],["Is service included?","Je spropitné v ceně?"]],
+"6. Nákupy a výlety":[["I'm just looking, thank you.","Jen se dívám, děkuji."],["Do you have a smaller size?","Máte menší velikost?"],["It's too expensive.","To je moc drahé."],["Can you give me a discount?","Můžete mi dát slevu?"],["I'll take it.","Vezmu si to."],["What time does it open?","V kolik se otevírá?"],["Two adults, please.","Dva dospělí, prosím."],["Can you take a photo of us?","Můžete nás vyfotit?"],["Where is the beach?","Kde je pláž?"],["Where is the Burj Khalifa entrance?","Kde je vstup do Burdž Chalífa?"]],
+"7. Nouze":[["Help!","Pomoc!"],["I need a doctor.","Potřebuji lékaře."],["Where is the pharmacy?","Kde je lékárna?"],["Call the police, please.","Zavolejte prosím policii."],["I lost my phone.","Ztratil jsem telefon."],["My daughter is lost.","Ztratila se mi dcera."],["I don't feel well.","Není mi dobře."],["Where is the Czech embassy?","Kde je české velvyslanectví?"]],
+"8. Čísla a čas":[["One, two, three, four, five.","Jedna, dvě, tři, čtyři, pět."],["Six, seven, eight, nine, ten.","Šest, sedm, osm, devět, deset."],["Twenty, fifty, one hundred.","Dvacet, padesát, sto."],["What time is it?","Kolik je hodin?"],["It's ten o'clock.","Je deset hodin."],["Today, tomorrow, yesterday.","Dnes, zítra, včera."],["In the morning, in the evening.","Ráno, večer."],["Monday, Tuesday, Wednesday.","Pondělí, úterý, středa."]]
+};
+const KEYS = Object.keys(D);
+
+/* ---------- uložený postup ---------- */
+let st = {};
+try { st = JSON.parse(localStorage.getItem('st') || '{}'); } catch(e) { st = {}; }
+function save(){ try { localStorage.setItem('st', JSON.stringify(st)); } catch(e) {} }
+
+/* ---------- řeč (opraveno pro iPhone) ---------- */
+const hasTTS = 'speechSynthesis' in window;
+let voice = null;
+function pickVoice(){
+  if (!hasTTS) return;
+  const vs = speechSynthesis.getVoices();
+  voice = vs.find(v => v.lang === 'en-US' && /Samantha/i.test(v.name))
+       || vs.find(v => v.lang === 'en-US')
+       || vs.find(v => v.lang === 'en-GB')
+       || vs.find(v => v.lang && v.lang.startsWith('en'))
+       || null;
+}
+if (hasTTS) {
+  pickVoice();
+  speechSynthesis.onvoiceschanged = pickVoice;
+}
+let stopAll = false;
+function speak(text, rate){
+  return new Promise(resolve => {
+    if (!hasTTS) { resolve(); return; }
+    const go = () => {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = voice ? voice.lang : 'en-US';
+      if (voice) u.voice = voice;
+      u.rate = rate;
+      u.volume = 1;
+      u.onend = () => resolve();
+      u.onerror = () => resolve();
+      speechSynthesis.speak(u);
+      speechSynthesis.resume(); // iPhone někdy čeká "pozastaveně"
+    };
+    if (speechSynthesis.speaking || speechSynthesis.pending) {
+      speechSynthesis.cancel();
+      setTimeout(go, 150);   // iPhone zahodí řeč spuštěnou hned po zrušení
+    } else {
+      go();
+    }
+  });
+}
+function say(text, rate){ stopAll = true; speak(text, rate); }
+
+/* ---------- obrazovky ---------- */
+const app = document.getElementById('app');
+let current = null;
+
+function home(){
+  current = null;
+  let h = '';
+  if (!hasTTS) h += '<div class="warn">Tento prohlížeč neumí číst nahlas. Otevři aplikaci v Safari.</div>';
+  h += '<button class="blue" data-act="test">🔊 Test zvuku</button><div id="diag" class="info"></div>';
+  h += '<div class="card info"><b>Jak se učit:</b> každý den 20 minut. Klepni na frázi, poslechni si ji a opakuj nahlas 3×. Pak ji zkus v režimu Zkouška. Naučenou frázi označ ✓.</div>';
+  KEYS.forEach((k, ki) => {
+    const n = D[k].filter((_, i) => st[k + i]).length;
+    h += `<button data-act="lekce" data-k="${ki}">${k} (${n}/${D[k].length})</button>`;
+  });
+  h += '<button class="blue" data-act="zk">🎧 Zkouška poslechem</button>';
+  h += '<button data-act="reset">Vynulovat postup</button>';
+  app.innerHTML = h;
+}
+
+function lekce(ki){
+  current = ki;
+  const k = KEYS[ki];
+  let h = `<div class="top"><button data-act="home">← Zpět</button><button data-act="all" data-k="${ki}">▶ Přehrát vše</button></div><h3>${k}</h3>`;
+  D[k].forEach((p, i) => {
+    h += `<div class="card phrase" data-act="play" data-k="${ki}" data-i="${i}" id="p${i}">
+      <div class="en">${p[0]}</div><div class="cz">${p[1]}</div>
+      <div class="row">
+        <button data-act="play" data-k="${ki}" data-i="${i}">▶ Normálně</button>
+        <button data-act="slow" data-k="${ki}" data-i="${i}">🐢 Pomalu</button>
+        <button class="chk ${st[k + i] ? 'done' : ''}" data-act="chk" data-k="${ki}" data-i="${i}">✓</button>
+      </div></div>`;
+  });
+  app.innerHTML = h;
+  scrollTo(0, 0);
+}
+
+async function playAll(ki){
+  const k = KEYS[ki];
+  if (hasTTS) speechSynthesis.cancel();
+  await new Promise(r => setTimeout(r, 200));
+  stopAll = false;
+  for (let i = 0; i < D[k].length; i++) {
+    if (stopAll || current !== ki) break;
+    document.querySelectorAll('.phrase').forEach(e => e.classList.remove('playing'));
+    const el = document.getElementById('p' + i);
+    if (el) { el.classList.add('playing'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+    await speak(D[k][i][0], 0.8);
+    await new Promise(r => setTimeout(r, 2500));   // pauza na zopakování
+  }
+  document.querySelectorAll('.phrase').forEach(e => e.classList.remove('playing'));
+}
+
+let zkP = null;
+function zk(){
+  current = null;
+  const k = KEYS[Math.floor(Math.random() * KEYS.length)];
+  zkP = D[k][Math.floor(Math.random() * D[k].length)];
+  app.innerHTML = `<div class="top"><button data-act="home">← Zpět</button></div>
+   <div class="card"><p>Poslechni si větu a řekni si, co znamená. Pak ji odkryj.</p>
+   <button class="blue" data-act="zkplay">▶ Přehrát</button>
+   <button class="blue" data-act="zkslow">🐢 Pomalu</button>
+   <div id="o" class="hide"><div class="en">${zkP[0]}</div><div class="cz">${zkP[1]}</div></div>
+   <button data-act="odkryt">Odkrýt</button>
+   <button data-act="zk">Další věta →</button></div>`;
+  say(zkP[0], 0.9);
+}
+
+function test(){
+  const d = document.getElementById('diag');
+  if (!hasTTS) { d.innerHTML = '<div class="warn">Čtení nahlas tu není k dispozici. Otevři aplikaci v Safari.</div>'; return; }
+  pickVoice();
+  const n = speechSynthesis.getVoices().filter(v => v.lang && v.lang.startsWith('en')).length;
+  say('Hello! This is a sound test.', 0.9);
+  d.innerHTML = `<div class="warn">Měl jsi slyšet anglickou větu.<br>Anglických hlasů v telefonu: <b>${n}</b>${voice ? ' (používám: ' + voice.name + ')' : ''}.<br>
+   Když nic neslyšíš: vypni tichý režim (přepínač nebo tlačítko na boku), zesil hlasitost a zkus to znovu.</div>`;
+}
+
+/* ---------- klepnutí ---------- */
+app.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  e.stopPropagation();
+  const act = t.dataset.act, ki = +t.dataset.k, i = +t.dataset.i;
+  const k = KEYS[ki];
+  if (act === 'home') { stopAll = true; if (hasTTS) speechSynthesis.cancel(); home(); }
+  else if (act === 'lekce') lekce(ki);
+  else if (act === 'play') say(D[k][i][0], 0.9);
+  else if (act === 'slow') say(D[k][i][0], 0.55);
+  else if (act === 'chk') { st[k + i] = !st[k + i]; save(); t.classList.toggle('done', !!st[k + i]); }
+  else if (act === 'all') playAll(ki);
+  else if (act === 'zk') zk();
+  else if (act === 'zkplay') say(zkP[0], 0.9);
+  else if (act === 'zkslow') say(zkP[0], 0.55);
+  else if (act === 'odkryt') document.getElementById('o').classList.remove('hide');
+  else if (act === 'test') test();
+  else if (act === 'reset') { if (confirm('Smazat postup?')) { st = {}; save(); home(); } }
+});
+
+home();
+</script>
+</body>
+</html>
